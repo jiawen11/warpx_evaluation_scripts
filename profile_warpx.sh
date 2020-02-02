@@ -161,7 +161,7 @@ profile_warpx() {
 
         echo "Profiling --- start ---"
 
-        sudo pcm-memory          >$log_dir/pcm_memory.txt   2>/dev/zero &
+        sudo pcm-memory  2>/dev/zero |tee $log_dir/pcm_memory.txt   &
         sudo pcm-latency -pmm -v >$log_dir/pcm_latency.txt  2>/dev/zero &
 
         $MPIRUN -np $MPINP $warpx_exe $problem >$log_dir/appoutput.txt &
