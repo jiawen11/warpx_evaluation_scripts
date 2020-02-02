@@ -122,6 +122,7 @@ extract_csv_numastat() {
         echo "Creating $numastat_out ..."
         echo "MemUsed" > $numastat_out
         cat $numastat_in | grep MemUsed|awk '{print $4}' >> $numastat_out
+        cat $numastat_out
     fi
 
 

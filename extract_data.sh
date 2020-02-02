@@ -26,8 +26,8 @@ if [ ! -d "$profile_result_dir" ];then
     exit
 fi
 
-cd $profile_result_dir
-subdirs="`ls -d */`"
+cd $profile_result_dir/warpx_problems
+subdirs="`ls -d */*/`"
 cd -
 
 echo "subdirs=$subdirs"
@@ -35,16 +35,17 @@ echo "subdirs=$subdirs"
 
 for dir in $subdirs; do
 
-    echo "Process $profile_result_dir/$dir ..."
  
-    dirbase=`basename $profile_result_dir/$dir`
-    dirname=`dirname $profile_result_dir/$dir`
+
+    dirbase=`basename $profile_result_dir/warpx_problems/$dir`
+    dirname=`dirname $profile_result_dir/warpx_problems/$dir`
 
     datadir="$dirname/$dirbase"
 
 
     echo "datadir=$datadir"
 
+    #continue
     extract_csv_appoutput $datadir
 
     extract_csv_cpucache $datadir
@@ -53,7 +54,7 @@ for dir in $subdirs; do
 
 #    extract_csv_cpupower $datadir
 
-    extract_csv_memorybank $datadir
+#    extract_csv_memorybank $datadir
 
 #    extract_csv_vmstat $datadir
 

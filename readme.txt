@@ -25,4 +25,7 @@ sh ./run_all.sh
 Draw Figures
 ------------
 1. sh ./extract_data.sh <profile-result-dir>
+   sh ./extract_data.sh ./profile_result_np16
+
 2. python ./draw_figures.py <profile-result-dir>
+   python ./draw_figures.py ./profile_result_np16
