@@ -19,7 +19,7 @@ echo "MPINP=$MPINP"
 MPIRUN="/usr/bin/mpirun"
 
 
-PROFILE_TOTAL_SECONDS=300 #maximum to 5 minutes for each one
+PROFILE_TOTAL_SECONDS=1500 #maximum to 25 minutes for each one
 
 rootdir="`dirname $0`"
 
@@ -62,8 +62,11 @@ warpx_problems_2d="$warpx_problems_2d warpx_problems/laser-driven-acceleration/i
 
 
 warpx_problems_3d=""
+
 warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_32x32x256"
 warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_64x64x512"
+#warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024"
+
 warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024"
 warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_64x64x512"
 
