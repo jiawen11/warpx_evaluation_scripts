@@ -166,12 +166,11 @@ profile_warpx() {
 
         $MPIRUN -np $MPINP $warpx_exe $problem >$log_dir/appoutput.txt &
 
-
+        #
         #ps -ax|grep $warpx_exe_basename
-
         #ps -ax|grep $warpx_exe_basename|sed '/grep/d'
-
         #ps -ax|grep $warpx_exe_basename|sed '/grep/d'|awk 'NR==2 {print $1}'
+        #
 
         check_status=`ps -ax|grep mpirun|sed '/grep/d'`
 
