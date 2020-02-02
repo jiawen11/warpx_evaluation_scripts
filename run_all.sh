@@ -5,7 +5,7 @@ rootpath="`dirname $0`"
 MPINPS="1 8 16 32"
 
 for np in $MPINPS;do
-    echo "np=$np"
+    echo "MPI racks: $np"
     $rootpath/profile_warpx.sh $np
 done
 

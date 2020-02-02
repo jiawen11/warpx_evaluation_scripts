@@ -185,10 +185,14 @@ profile_warpx() {
         while [ "$t" -lt "$PROFILE_TOTAL_SECONDS" ];do
             t="`expr $t + 1`"
 
+
+            echo "t=$t"
+
             check_status=`ps -ax|grep mpirun|sed '/grep/d'`
             #check_status=`ps -ax|grep mpirun|sed '/grep/d'|awk 'NR==2 {print $1}'`
         
             if [ "$check_status" = "" ];then
+                echo "Profiling time is out, terminating ..."
                 break
             fi
 
