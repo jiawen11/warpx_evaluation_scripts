@@ -19,7 +19,7 @@ echo "MPINP=$MPINP"
 MPIRUN="/usr/bin/mpirun"
 
 
-PROFILE_TOTAL_SECONDS=1500 #maximum to 25 minutes for each one
+PROFILE_TOTAL_SECONDS=1200 #maximum to 20 minutes for each one
 
 rootdir="`dirname $0`"
 
@@ -37,7 +37,7 @@ fi
 
 mkdir $result_dir 2>/dev/zero
 
-SUDO=/usr/bin/sudo
+#SUDO=/usr/bin/sudo
 
 warpx_exe_2d="$warpx_run/warpx_2d"
 warpx_exe_3d="$warpx_run/warpx_3d"
@@ -81,9 +81,9 @@ do_cleanup() {
     killall mpirun 2>/dev/zero
     killall $warpx_exe_2d 2>/dev/zero
     killall $warpx_exe_3d 2>/dev/zero
-    $SUDO killall pcm-memory 2>/dev/zero
-    $SUDO killall pcm-latency 2>/dev/zero
-    $SUDO killall numastat 2>/dev/zero
+    sudo killall pcm-memory 2>/dev/zero
+    sudo killall pcm-latency 2>/dev/zero
+    sudo killall numastat 2>/dev/zero
 
 }
 
@@ -161,8 +161,8 @@ profile_warpx() {
 
         echo "Profiling --- start ---"
 
-        $SUDO pcm-memory >$log_dir/pcm_memory.txt            2>/dev/zero &
-        $SUDO pcm-latency -pmm -v >$log_dir/pcm_latency.txt  2>/dev/zero &
+        sudo pcm-memory          >$log_dir/pcm_memory.txt   2>/dev/zero &
+        sudo pcm-latency -pmm -v >$log_dir/pcm_latency.txt  2>/dev/zero &
 
         $MPIRUN -np $MPINP $warpx_exe $problem >$log_dir/appoutput.txt &
 
