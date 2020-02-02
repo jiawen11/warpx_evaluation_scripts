@@ -58,12 +58,11 @@ for dir in $subdirs; do
 
     echo "datadir=$datadir"
 
-    #continue
-#    extract_csv_appoutput $datadir
+    extract_csv_appoutput $datadir
 
-#    extract_csv_cpucache $datadir
+    extract_csv_cpucache $datadir
 
-#    extract_csv_numastat $datadir
+    extract_csv_numastat $datadir
 
 
     extract_csv_memorybank $datadir
