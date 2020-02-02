@@ -55,9 +55,9 @@ fi
 
 warpx_problems_2d=""
 warpx_problems_2d="$warpx_problems_2d warpx_problems/beam-driven-acceleration/inputs_2d.dms"
-#warpx_problems_2d="$warpx_problems_2d warpx_problems/beam-driven-acceleration/inputs_2d_boost.dms"
-#warpx_problems_2d="$warpx_problems_2d warpx_problems/laser-driven-acceleration/inputs_2d.dms"
-#warpx_problems_2d="$warpx_problems_2d warpx_problems/laser-driven-acceleration/inputs_2d_boost.dms"
+warpx_problems_2d="$warpx_problems_2d warpx_problems/beam-driven-acceleration/inputs_2d_boost.dms"
+warpx_problems_2d="$warpx_problems_2d warpx_problems/laser-driven-acceleration/inputs_2d.dms"
+warpx_problems_2d="$warpx_problems_2d warpx_problems/laser-driven-acceleration/inputs_2d_boost.dms"
 
 
 warpx_problems_3d=""
@@ -211,7 +211,7 @@ handle_signal_INT(){
 
 trap "handle_signal_INT"  INT
 
-#profile_warpx "3D"
+profile_warpx "3D"
 profile_warpx "2D"
 
 echo "Finished."
