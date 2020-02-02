@@ -6,7 +6,9 @@ export PATH=$PATH:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 #MPINP=16
 
 if [ "$1" = "" ];then
-    MPINP=1
+    #MPINP=1
+    echo "$0 <Number-of-MPI-Racks>"
+    exit
 else
     MPINP="$1"
 fi
