@@ -19,8 +19,7 @@ echo "MPINP=$MPINP"
 MPIRUN="/usr/bin/mpirun"
 
 
-PROFILE_TOTAL_SECONDS=600 #maximum to 10 minutes for each one
-PROFILE_INTERVAL_SECONDS=1
+PROFILE_TOTAL_SECONDS=300 #maximum to 5 minutes for each one
 
 rootdir="`dirname $0`"
 
@@ -63,8 +62,10 @@ warpx_problems_2d="$warpx_problems_2d warpx_problems/laser-driven-acceleration/i
 
 
 warpx_problems_3d=""
-warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/inputs_3d_boost.dms"
-warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/inputs_3d.dms"
+warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_32x32x256"
+warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_64x64x512"
+warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024"
+warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_64x64x512"
 
 
 ls -l $warpx_run/
@@ -139,27 +140,28 @@ profile_warpx() {
 
         do_cleanup
  
-        problem_name="`dirname $problem`"
-        problem_name="`basename $problem_name`"
+        #problem_name="`dirname $problem`"
+        #problem_name="`basename $problem_name`"
 
-        echo "problem_name=$problem_name"
+        #echo "problem_name=$problem_name"
 
 
-        log_dir="$result_dir/$problem_name"
+        log_dir="$result_dir/$problem"
 
-        mkdir $result_dir/$problem_name 2>/dev/zero
 
-        touch $result_dir/$problem_name/pcm_memory.txt
-        touch $result_dir/$problem_name/pcm_latency.txt
-        touch $result_dir/$problem_name/numastat.txt
-        touch $result_dir/$problem_name/appoutput.txt
+        mkdir -p $log_dir 2>/dev/zero
+
+        touch $log_dir/pcm_memory.txt
+        touch $log_dir/pcm_latency.txt
+        touch $log_dir/numastat.txt
+        touch $log_dir/appoutput.txt
 
         echo "Profiling --- start ---"
 
-        $SUDO pcm-memory -csv=$result_dir/$problem_name/pcm_memory.txt $PROFILE_INTERVAL_SECONDS 2>/dev/zero &
-        $SUDO pcm-latency -pmm -v >$result_dir/$problem_name/pcm_latency.txt 2>/dev/zero &
+        $SUDO pcm-memory 1 >$log_dir/pcm_memory.txt        2>/dev/zero &
+        $SUDO pcm-latency -pmm -v >$log_dir/pcm_latency.txt  1 2>/dev/zero &
 
-        $MPIRUN -np $MPINP $warpx_exe $problem >$result_dir/$problem_name/appoutput.txt &
+        $MPIRUN -np $MPINP $warpx_exe $problem >$log_dir/appoutput.txt &
 
 
         #ps -ax|grep $warpx_exe_basename
@@ -173,7 +175,6 @@ profile_warpx() {
         if [ "$check_status" = "" ];then
             echo "Profiling --- end earlier ---"
             do_cleanup
-            copy_plotfiles $result_dir/$problem_name
             continue
         fi
 
@@ -182,7 +183,7 @@ profile_warpx() {
 
         t=0
         while [ "$t" -lt "$PROFILE_TOTAL_SECONDS" ];do
-            t="`expr $t + $PROFILE_INTERVAL_SECONDS`"
+            t="`expr $t + 1`"
 
             check_status=`ps -ax|grep mpirun|sed '/grep/d'`
             #check_status=`ps -ax|grep mpirun|sed '/grep/d'|awk 'NR==2 {print $1}'`
@@ -191,14 +192,14 @@ profile_warpx() {
                 break
             fi
 
-            echo "t=$t" >> $result_dir/$problem_name/numastat.txt
-            numastat -m >> $result_dir/$problem_name/numastat.txt 2>/dev/zero
+            echo "t=$t" >> $log_dir/numastat.txt
+            numastat -m >> $log_dir/numastat.txt 2>/dev/zero
 
-            sleep $PROFILE_INTERVAL_SECONDS
+            sleep 1
         done
 
         do_cleanup
-        copy_plotfiles $result_dir/$problem_name
+        #copy_plotfiles $result_dir/$problem_name
 
 
         echo "Profiling --- end ---"
@@ -215,6 +216,6 @@ handle_signal_INT(){
 trap "handle_signal_INT"  INT
 
 profile_warpx "3D"
-profile_warpx "2D"
+#profile_warpx "2D"
 
 echo "Finished."
