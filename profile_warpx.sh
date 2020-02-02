@@ -161,8 +161,8 @@ profile_warpx() {
 
         echo "Profiling --- start ---"
 
-        $SUDO pcm-memory 1 >$log_dir/pcm_memory.txt        2>/dev/zero &
-        $SUDO pcm-latency -pmm -v >$log_dir/pcm_latency.txt  1 2>/dev/zero &
+        $SUDO pcm-memory >$log_dir/pcm_memory.txt            2>/dev/zero &
+        $SUDO pcm-latency -pmm -v >$log_dir/pcm_latency.txt  2>/dev/zero &
 
         $MPIRUN -np $MPINP $warpx_exe $problem >$log_dir/appoutput.txt &
 
