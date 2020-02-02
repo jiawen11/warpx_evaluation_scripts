@@ -225,6 +225,9 @@ def draw_figure_cpucache(csvfile):
     f.close()
 
 
+    if len(Y1) == 0 or len(Y2) == 0:
+        return
+
     Y1 = np.array(Y1, dtype=np.double)
     Y2 = np.array(Y2, dtype=np.double)
 

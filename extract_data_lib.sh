@@ -27,14 +27,270 @@ extract_csv_appoutput(){
 
 }
 
+
+get_channel_read_and_write(){
+    val="1234"
+}
+
 extract_csv_memorybank(){
     datadir="$1"
 
     memorybank_in=$datadir/pcm_memory.txt
     memorybank_out=$datadir/pcm_memory.csv
 
+
+    #header="socket_0_channel_0 socket_0_channel_1 socket_0_channel_2 socket_0_channel_3"
+    #header="$header "
+
+    header="system_read system_write system_total"
+
+
+    for socket in $SOCKETS_LIST; do
+        #echo "$socket"
+        
+        title1="_socket_""$socket""_read"
+        
+        title2="_socket_""$socket""_write"
+        
+        title3="_socket_""$socket""_pwrite"
+        
+        title4="_socket_""$socket""_total"
+
+        header="$header $title1 $title2 $title3 $title4"
+
+
+        for channel in $CHANNELS_LIST;do
+            title5="_socket_""$socket""_channel_""$channel""_read"
+            
+            title6="_socket_""$socket""_channel_""$channel""_write"
+            
+            header="$header $title5 $title6"
+        done
+
+    done
+
+    echo $header > $memorybank_out
+
+
     #echo "extract_csv_memorybank() -- Fixme"
-    cp $memorybank_in $memorybank_out
+    #cp $memorybank_in $memorybank_out
+    
+    record=""
+
+    while read line; do
+        
+        #
+        #
+        # sync to line "Memory Channel Monitoring"
+        #
+        #
+        line=`echo $line|grep 'Memory Channel Monitoring'`
+
+        if [ "$line" = "" ];then
+            continue
+        fi
+       
+
+        read line
+
+        if [ "$line" = "" ];then
+            break
+        fi
+
+
+        for channel in $CHANNELS_LIST;do
+            
+            #
+            # read socket N channel M
+            #
+
+            read line
+
+            if [ "$line" = "" ];then
+                break
+            fi
+
+            #echo $line
+
+
+            col=3
+            channel_read=""
+            for socket in $SOCKETS_LIST;do
+            
+                channel_read="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
+                channel_read="`echo $channel_read`"
+                col="`expr $col + 2`"
+                
+                echo "socket_$socket""_channel_$channel""_read=$channel_read"
+            done
+
+            #
+            # write socket N channel M
+            #
+
+
+            read line
+
+            if [ "$line" = "" ];then
+                break
+            fi
+
+
+
+            col=2
+            channel_write=""
+            for socket in $SOCKETS_LIST;do
+            
+                channel_write="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
+                channel_write="`echo $channel_write`"
+                col="`expr $col + 1`"
+                
+                echo "socket_$socket""_channel_$channel""_write=$channel_write"
+            done
+
+
+        done
+ 
+
+        #
+        # socket total read
+        #
+
+
+        read line
+
+        if [ "$line" = "" ];then
+            break
+        fi
+
+        col=2
+        for socket in $SOCKETS_LIST;do
+            socket_read="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
+            socket_read="`echo $socket_read`"
+            echo "socket_$socket""_read=$socket_read"
+            col="`expr $col + 1`"
+        done
+
+        #
+        # socket total write
+        #
+
+
+        read line
+
+        if [ "$line" = "" ];then
+            break
+        fi
+
+        col=2
+        for socket in $SOCKETS_LIST;do
+            socket_write="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
+            socket_write="`echo $socket_write`"
+            echo "socket_$socket""_write=$socket_write"
+            col="`expr $col + 1`"
+        done
+
+        #
+        # socket total pwrite
+        #
+
+
+        read line
+
+        if [ "$line" = "" ];then
+            break
+        fi
+
+        col=2
+        for socket in $SOCKETS_LIST;do
+            socket_pwrite="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
+            socket_pwrite="`echo $socket_pwrite`"
+            echo "socket_$socket""_pwrite=$socket_pwrite"
+            col="`expr $col + 1`"
+        done
+
+
+        #
+        # socket total
+        #
+
+
+        read line
+
+        if [ "$line" = "" ];then
+            break
+        fi
+
+        col=2
+        for socket in $SOCKETS_LIST;do
+            socket_total="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
+            socket_total="`echo $socket_total`"
+            echo "socket_$socket""_total=$socket_total"
+            col="`expr $col + 1`"
+        done
+
+
+        #
+        # skip two lines
+        #
+
+        read line
+        read line
+
+        if [ "$line" = "" ];then
+            break
+        fi
+
+        #
+        # system read
+        #
+
+        read line
+
+        if [ "$line" = "" ];then
+            break
+        fi
+
+        system_read="`echo $line|cut -d':' -f2|cut -d'-' -f1`"
+        system_read="`echo $system_read`"
+        echo "system_read=$system_read"
+
+        #
+        # system write
+        #
+
+        read line
+
+        if [ "$line" = "" ];then
+            break
+        fi
+
+        system_write="`echo $line|cut -d':' -f2|cut -d'-' -f1`"
+        system_write="`echo $system_write`"
+        echo "system_write=$system_write"
+
+
+        #
+        # system total
+        #
+
+        read line
+
+        if [ "$line" = "" ];then
+            break
+        fi
+
+        system_total="`echo $line|cut -d':' -f2|cut -d'-' -f1`"
+        system_total="`echo $system_total`"
+        echo "system_total=$system_total"
+
+
+
+        #exit
+
+    done < $memorybank_in
+
+
 }
 
 extract_csv_cpucache() {
