@@ -33,6 +33,14 @@ get_channel_read_and_write(){
 }
 
 extract_csv_memorybank(){
+
+
+    #x_1_2_3="test"
+    #val="x_1_2_3"
+    #x=`eval echo '$'$val`
+    #echo "x=$x"
+    #exit
+
     datadir="$1"
 
     memorybank_in=$datadir/pcm_memory.txt
@@ -48,21 +56,21 @@ extract_csv_memorybank(){
     for socket in $SOCKETS_LIST; do
         #echo "$socket"
         
-        title1="_socket_""$socket""_read"
+        title1="socket_""$socket""_read"
         
-        title2="_socket_""$socket""_write"
+        title2="socket_""$socket""_write"
         
-        title3="_socket_""$socket""_pwrite"
+        title3="socket_""$socket""_pwrite"
         
-        title4="_socket_""$socket""_total"
+        title4="socket_""$socket""_total"
 
         header="$header $title1 $title2 $title3 $title4"
 
 
         for channel in $CHANNELS_LIST;do
-            title5="_socket_""$socket""_channel_""$channel""_read"
+            title5="socket_""$socket""_channel_""$channel""_read"
             
-            title6="_socket_""$socket""_channel_""$channel""_write"
+            title6="socket_""$socket""_channel_""$channel""_write"
             
             header="$header $title5 $title6"
         done
@@ -97,7 +105,10 @@ extract_csv_memorybank(){
             break
         fi
 
-
+       
+        #
+        # echo "|-"|tr -d '|-' 
+        #
         for channel in $CHANNELS_LIST;do
             
             #
@@ -113,15 +124,27 @@ extract_csv_memorybank(){
             #echo $line
 
 
+            if [ "`echo $line|grep Reads`" = "" ];then
+                echo $line
+                exit
+            fi
+
+
             col=3
             channel_read=""
             for socket in $SOCKETS_LIST;do
             
-                channel_read="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
+                channel_read="`echo $line|cut -d':' -f$col|cut -d'-' -f1|tr -d \'\|\-\'`"
                 channel_read="`echo $channel_read`"
                 col="`expr $col + 2`"
                 
-                echo "socket_$socket""_channel_$channel""_read=$channel_read"
+                #if [ "$channel_read" = "" ];then
+                #    echo $line
+                #fi
+
+                eval "socket_""$socket""_channel_""$channel""_read=$channel_read"
+
+                #echo "socket_$socket""_channel_$channel""_read=$channel_read"
             done
 
             #
@@ -136,6 +159,7 @@ extract_csv_memorybank(){
             fi
 
 
+            #echo $line
 
             col=2
             channel_write=""
@@ -145,7 +169,8 @@ extract_csv_memorybank(){
                 channel_write="`echo $channel_write`"
                 col="`expr $col + 1`"
                 
-                echo "socket_$socket""_channel_$channel""_write=$channel_write"
+                eval "socket_""$socket""_channel_""$channel""_write=$channel_write"
+                #echo "socket_$socket""_channel_$channel""_write=$channel_write"
             done
 
 
@@ -163,11 +188,16 @@ extract_csv_memorybank(){
             break
         fi
 
+        #echo $line
+
         col=2
         for socket in $SOCKETS_LIST;do
             socket_read="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
             socket_read="`echo $socket_read`"
-            echo "socket_$socket""_read=$socket_read"
+            
+            eval "socket_""$socket""_read=$socket_read"
+
+            #echo "socket_$socket""_read=$socket_read"
             col="`expr $col + 1`"
         done
 
@@ -182,11 +212,14 @@ extract_csv_memorybank(){
             break
         fi
 
+        #echo $line
+
         col=2
         for socket in $SOCKETS_LIST;do
             socket_write="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
             socket_write="`echo $socket_write`"
-            echo "socket_$socket""_write=$socket_write"
+            eval "socket_""$socket""_write=$socket_write"
+            #echo "socket_$socket""_write=$socket_write"
             col="`expr $col + 1`"
         done
 
@@ -200,12 +233,15 @@ extract_csv_memorybank(){
         if [ "$line" = "" ];then
             break
         fi
+        
+        #echo $line
 
         col=2
         for socket in $SOCKETS_LIST;do
             socket_pwrite="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
             socket_pwrite="`echo $socket_pwrite`"
-            echo "socket_$socket""_pwrite=$socket_pwrite"
+            eval "socket_""$socket""_pwrite=$socket_pwrite"
+            #echo "socket_$socket""_pwrite=$socket_pwrite"
             col="`expr $col + 1`"
         done
 
@@ -221,11 +257,14 @@ extract_csv_memorybank(){
             break
         fi
 
+        #echo $line
+
         col=2
         for socket in $SOCKETS_LIST;do
             socket_total="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
             socket_total="`echo $socket_total`"
-            echo "socket_$socket""_total=$socket_total"
+            #echo "socket_$socket""_total=$socket_total"
+            eval "socket_""$socket""_total=$socket_total"
             col="`expr $col + 1`"
         done
 
@@ -251,9 +290,11 @@ extract_csv_memorybank(){
             break
         fi
 
+        #echo $line
+
         system_read="`echo $line|cut -d':' -f2|cut -d'-' -f1`"
         system_read="`echo $system_read`"
-        echo "system_read=$system_read"
+        eval "system_read=$system_read"
 
         #
         # system write
@@ -265,9 +306,11 @@ extract_csv_memorybank(){
             break
         fi
 
+        #echo $line
+
         system_write="`echo $line|cut -d':' -f2|cut -d'-' -f1`"
         system_write="`echo $system_write`"
-        echo "system_write=$system_write"
+        eval "system_write=$system_write"
 
 
         #
@@ -280,13 +323,66 @@ extract_csv_memorybank(){
             break
         fi
 
+        #echo $line
+
         system_total="`echo $line|cut -d':' -f2|cut -d'-' -f1`"
         system_total="`echo $system_total`"
-        echo "system_total=$system_total"
-
+        eval "system_total=$system_total"
 
 
         #exit
+
+
+        #
+        # write to CSV files
+        #
+
+        record=""
+
+        #"system_read system_write system_total"
+
+        record="$system_read $system_write $system_total"
+
+
+        for socket in $SOCKETS_LIST; do
+        #echo "$socket"
+        
+            var1="socket_""$socket""_read"
+            val1=`eval echo '$'$var1`
+
+            #echo $val1
+
+            var2="socket_""$socket""_write"
+            val2=`eval echo '$'$var2`
+        
+            var3="socket_""$socket""_pwrite"
+            val3=`eval echo '$'$var3`
+        
+            var4="socket_""$socket""_total"
+            val4=`eval echo '$'$var4`
+
+            #header="$header $title1 $title2 $title3 $title4"
+
+            record="$record $val1 $val2 $val3 $val4"
+
+            for channel in $CHANNELS_LIST;do
+               var5="socket_""$socket""_channel_""$channel""_read"
+               val5=`eval echo '$'$var5`
+            
+               var6="socket_""$socket""_channel_""$channel""_write"
+               val6=`eval echo '$'$var6`
+            
+               #header="$header $title5 $title6"
+               record="$record $val5 $val6"
+            done
+
+        done
+
+        #channel=1
+        #socket=1
+        #eval echo '$'"socket_""$socket""_total"
+    
+        echo $record |tee -a $memorybank_out
 
     done < $memorybank_in
 
