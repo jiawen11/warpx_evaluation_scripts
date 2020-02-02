@@ -191,7 +191,8 @@ profile_warpx() {
                 break
             fi
 
-            $SUDO numastat -p$warpx_pid -m |tee -a $result_dir/$problem_name/numastat.txt 2>/dev/zero
+            echo "t=$t" >> $result_dir/$problem_name/numastat.txt
+            numastat -m >> $result_dir/$problem_name/numastat.txt 2>/dev/zero
 
             sleep $PROFILE_INTERVAL_SECONDS
         done
