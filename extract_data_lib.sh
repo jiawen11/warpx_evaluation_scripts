@@ -348,18 +348,18 @@ extract_csv_memorybank(){
         #echo "$socket"
         
             var1="socket_""$socket""_read"
-            val1=`eval echo '$'$var1`
+            val1="`eval echo '$'$var1`"
 
             #echo $val1
 
             var2="socket_""$socket""_write"
-            val2=`eval echo '$'$var2`
+            val2="`eval echo '$'$var2`"
         
             var3="socket_""$socket""_pwrite"
-            val3=`eval echo '$'$var3`
+            val3="`eval echo '$'$var3`"
         
             var4="socket_""$socket""_total"
-            val4=`eval echo '$'$var4`
+            val4="`eval echo '$'$var4`"
 
             #header="$header $title1 $title2 $title3 $title4"
 
@@ -367,10 +367,10 @@ extract_csv_memorybank(){
 
             for channel in $CHANNELS_LIST;do
                var5="socket_""$socket""_channel_""$channel""_read"
-               val5=`eval echo '$'$var5`
+               val5="`eval echo '$'$var5`"
             
                var6="socket_""$socket""_channel_""$channel""_write"
-               val6=`eval echo '$'$var6`
+               val6="`eval echo '$'$var6`"
             
                #header="$header $title5 $title6"
                record="$record $val5 $val6"
