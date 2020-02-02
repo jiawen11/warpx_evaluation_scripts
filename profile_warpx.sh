@@ -178,7 +178,7 @@ profile_warpx() {
             continue
         fi
 
-        echo "PID: $warpx_pid"
+        #echo "PID: $warpx_pid"
 
 
         t=0
@@ -192,7 +192,6 @@ profile_warpx() {
             #check_status=`ps -ax|grep mpirun|sed '/grep/d'|awk 'NR==2 {print $1}'`
         
             if [ "$check_status" = "" ];then
-                echo "Profiling time is out, terminating ..."
                 break
             fi
 
