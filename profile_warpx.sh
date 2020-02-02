@@ -81,6 +81,24 @@ do_cleanup() {
 
 }
 
+
+copy_plotfiles(){
+
+    target_dir="$1"
+
+    if [ ! -d "plotfiles" ];then
+        return
+    fi
+
+     if [ ! -d "$target_dir" ];then
+        return
+    fi
+
+    mv plotfiles $target_dir/ 2>/dev/zero
+
+}
+
+
 profile_warpx() {
 
     problem_type="$1"
@@ -139,7 +157,7 @@ profile_warpx() {
         $SUDO pcm-memory -csv=$result_dir/$problem_name/pcm_memory.txt $PROFILE_INTERVAL_SECONDS 2>/dev/zero &
         $SUDO pcm-latency -pmm -v >$result_dir/$problem_name/pcm_latency.txt 2>/dev/zero &
 
-        $MPIRUN -np $MPINP $warpx_exe $problem | tee $result_dir/$problem_name/appoutput.txt &
+        $MPIRUN -np $MPINP $warpx_exe $problem >$result_dir/$problem_name/appoutput.txt &
 
 
         #ps -ax|grep $warpx_exe_basename
@@ -153,6 +171,7 @@ profile_warpx() {
         if [ "$check_status" = "" ];then
             echo "Profiling --- end earlier ---"
             do_cleanup
+            copy_plotfiles $result_dir/$problem_name
             continue
         fi
 
@@ -176,6 +195,7 @@ profile_warpx() {
         done
 
         do_cleanup
+        copy_plotfiles $result_dir/$problem_name
 
 
         echo "Profiling --- end ---"
