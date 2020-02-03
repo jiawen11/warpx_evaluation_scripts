@@ -18,8 +18,11 @@ echo "MPINP=$MPINP"
 
 MPIRUN="/usr/bin/mpirun"
 
-#ENABLE_TIMEOUT_KILL=1
 
+#
+# 0     the profiler will wait until the warpx apps exit voluntarily
+# > 0   wait specified seconds to kill 
+#
 PROFILE_TOTAL_SECONDS=1200 #maximum to 20 minutes for each one
 
 rootdir="`dirname $0`"
@@ -193,8 +196,14 @@ profile_warpx() {
 
 
         t=0
-        while [ "$t" -lt "$PROFILE_TOTAL_SECONDS" ];do
+        while [ 1 = 1 ];do
             t="`expr $t + 1`"
+
+            if [ "$PROFILE_TOTAL_SECONDS" -gt "0" ] && [ "$t" -gt "$PROFILE_TOTAL_SECONDS" ];then
+                echo "Running is timed out, t=$t"
+                break
+            fi
+
 
 
             echo "t=$t"
@@ -203,6 +212,7 @@ profile_warpx() {
             #check_status=`ps -ax|grep mpirun|sed '/grep/d'|awk 'NR==2 {print $1}'`
         
             if [ "$check_status" = "" ];then
+                echo "App exited voluntarily."
                 break
             fi
 
