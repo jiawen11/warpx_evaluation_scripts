@@ -50,43 +50,44 @@ extract_csv_memorybank(){
     #header="socket_0_channel_0 socket_0_channel_1 socket_0_channel_2 socket_0_channel_3"
     #header="$header "
 
-    header="system_read system_write system_total"
+    header="system_read,system_write,system_total"
 
 
     for socket in $SOCKETS_LIST; do
         #echo "$socket"
-        
+
         title1="socket_""$socket""_read"
-        
+
         title2="socket_""$socket""_write"
-        
+
         title3="socket_""$socket""_pwrite"
-        
+
         title4="socket_""$socket""_total"
 
-        header="$header $title1 $title2 $title3 $title4"
+        header="$header,$title1,$title2,$title3,$title4"
 
 
         for channel in $CHANNELS_LIST;do
             title5="socket_""$socket""_channel_""$channel""_read"
-            
+
             title6="socket_""$socket""_channel_""$channel""_write"
-            
-            header="$header $title5 $title6"
+
+            header="$header,$title5,$title6"
         done
 
     done
 
     echo $header > $memorybank_out
+    #echo $header | tee $memorybank_out
 
 
     #echo "extract_csv_memorybank() -- Fixme"
     #cp $memorybank_in $memorybank_out
-    
+
     record=""
 
     while read line; do
-        
+
         #
         #
         # sync to line "Memory Channel Monitoring"
@@ -97,7 +98,7 @@ extract_csv_memorybank(){
         if [ "$line" = "" ];then
             continue
         fi
-       
+
 
         read line
 
@@ -105,12 +106,12 @@ extract_csv_memorybank(){
             break
         fi
 
-       
+
         #
-        # echo "|-"|tr -d '|-' 
+        # echo "|-"|tr -d '|-'
         #
         for channel in $CHANNELS_LIST;do
-            
+
             #
             # read socket N channel M
             #
@@ -133,11 +134,11 @@ extract_csv_memorybank(){
             col=3
             channel_read=""
             for socket in $SOCKETS_LIST;do
-            
+
                 channel_read="`echo $line|cut -d':' -f$col|cut -d'-' -f1|tr -d \'\|\-\'`"
                 channel_read="`echo $channel_read`"
                 col="`expr $col + 2`"
-                
+
                 #if [ "$channel_read" = "" ];then
                 #    echo $line
                 #fi
@@ -164,18 +165,18 @@ extract_csv_memorybank(){
             col=2
             channel_write=""
             for socket in $SOCKETS_LIST;do
-            
+
                 channel_write="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
                 channel_write="`echo $channel_write`"
                 col="`expr $col + 1`"
-                
+
                 eval "socket_""$socket""_channel_""$channel""_write=$channel_write"
                 #echo "socket_$socket""_channel_$channel""_write=$channel_write"
             done
 
 
         done
- 
+
 
         #
         # socket total read
@@ -194,7 +195,7 @@ extract_csv_memorybank(){
         for socket in $SOCKETS_LIST;do
             socket_read="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
             socket_read="`echo $socket_read`"
-            
+
             eval "socket_""$socket""_read=$socket_read"
 
             #echo "socket_$socket""_read=$socket_read"
@@ -233,7 +234,7 @@ extract_csv_memorybank(){
         if [ "$line" = "" ];then
             break
         fi
-        
+
         #echo $line
 
         col=2
@@ -341,12 +342,12 @@ extract_csv_memorybank(){
 
         #"system_read system_write system_total"
 
-        record="$system_read $system_write $system_total"
+        record="$system_read,$system_write,$system_total"
 
 
         for socket in $SOCKETS_LIST; do
         #echo "$socket"
-        
+
             var1="socket_""$socket""_read"
             val1="`eval echo '$'$var1`"
 
@@ -354,26 +355,26 @@ extract_csv_memorybank(){
 
             var2="socket_""$socket""_write"
             val2="`eval echo '$'$var2`"
-        
+
             var3="socket_""$socket""_pwrite"
             val3="`eval echo '$'$var3`"
-        
+
             var4="socket_""$socket""_total"
             val4="`eval echo '$'$var4`"
 
             #header="$header $title1 $title2 $title3 $title4"
 
-            record="$record $val1 $val2 $val3 $val4"
+            record="$record,$val1,$val2,$val3,$val4"
 
             for channel in $CHANNELS_LIST;do
                var5="socket_""$socket""_channel_""$channel""_read"
                val5="`eval echo '$'$var5`"
-            
+
                var6="socket_""$socket""_channel_""$channel""_write"
                val6="`eval echo '$'$var6`"
-            
+
                #header="$header $title5 $title6"
-               record="$record $val5 $val6"
+               record="$record,$val5,$val6"
             done
 
         done
@@ -381,7 +382,7 @@ extract_csv_memorybank(){
         #channel=1
         #socket=1
         #eval echo '$'"socket_""$socket""_total"
-    
+
         echo $record |tee -a $memorybank_out
 
     done < $memorybank_in
@@ -398,7 +399,7 @@ extract_csv_cpucache() {
 
     cpucache_in=$datadir/pcm_latency.txt
     cpucache_out=$datadir/pcm_latency.csv
-    
+
     if [ -f "$cpucache_in" ];then
         echo "Creating $cpucache_out ..."
         #echo "Socket0,Socket1" > $cpucache_out
@@ -435,10 +436,10 @@ extract_csv_cpucache() {
             if [ "$line" = "" ];then
                 continue
             fi
-            
+
             socket_id="`echo $n % $N_SOCKETS|bc`"
             n="`expr $n + 1`"
-            
+
 
             if [ "$socket_id" = "0" ]; then
                 record="$line"
@@ -469,7 +470,7 @@ extract_csv_numastat() {
 
     numastat_in=$datadir/numastat.txt
     numastat_out=$datadir/numastat.csv
-    
+
     if [ -f "$numastat_in" ];then
         echo "Creating $numastat_out ..."
         echo "MemUsed" > $numastat_out
@@ -548,7 +549,7 @@ extract_csv_cpupower(){
             #    #Mem
             #    echo "Socket#$socket_id MEM $line Watts"
             #fi
-            
+
             if [ "$mod" = "0" ];then
                 record="$line"
             else
@@ -563,9 +564,7 @@ extract_csv_cpupower(){
             #echo $line
         done < $app_cpupower_in
 
-    fi   
+    fi
 
 
 }
-
-
