@@ -18,6 +18,7 @@ echo "MPINP=$MPINP"
 
 MPIRUN="/usr/bin/mpirun"
 
+#ENABLE_TIMEOUT_KILL=1
 
 PROFILE_TOTAL_SECONDS=1200 #maximum to 20 minutes for each one
 
@@ -63,14 +64,20 @@ warpx_problems_2d="$warpx_problems_2d warpx_problems/laser-driven-acceleration/i
 
 warpx_problems_3d=""
 
-warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_32x32x256"
-warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_64x64x512"
-#warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024"
+#warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_32x32x256"
+#warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_64x64x512"
+
+#warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_64x64x512"
 
 warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024"
-warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_64x64x512"
+warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024_maxlevel_1"
+warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024_maxlevel_3"
+warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024_maxlevel_5"
 
+warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024"
+warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024_maxlevel_1"
 warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024_maxlevel_3"
+warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024_maxlevel_5"
 
 
 ls -l $warpx_run/
