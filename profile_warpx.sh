@@ -189,6 +189,17 @@ profile_warpx() {
 
         $MPIRUN -np $MPINP $warpx_exe $problem >$log_dir/appoutput.txt 2>$log_dir/appoutput_error.txt &
 
+
+        #
+        # get all warpx process PIDs
+        #
+        warpx_pids="`ps -ax|grep warpx|sed '/sh/d'|sed '/grep/d'|sed '/mpirun/d'|awk 'NR==1 {print $1}'`"
+        
+        # remove blanks before or after the PIDs
+        warpx_pids="`echo $warpx_pids`"
+
+        echo "warpx_pids=$warpx_pids"
+
         #
         #ps -ax|grep $warpx_exe_basename
         #ps -ax|grep $warpx_exe_basename|sed '/grep/d'
@@ -229,6 +240,13 @@ profile_warpx() {
 
             echo "t=$t" >> $log_dir/numastat.txt
             numastat -m >> $log_dir/numastat.txt 2>/dev/zero
+
+            n=1
+            for pid in $warpx_pids; do
+                vmstat_log="$log_dir/""vmstat_$n"".txt"
+                cat /proc/$pid/status >> $vmstat_log
+                n="`expr $n + 1`"
+            done
 
             sleep 1
         done
