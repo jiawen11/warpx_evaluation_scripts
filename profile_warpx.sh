@@ -93,6 +93,13 @@ echo "Profiling WarpX 2D ..."
 
 
 do_cleanup() {
+
+    # remove warpx results
+    rm -rf $rootdir/diags 2>/dev/zero
+    rm -rf $rootdir/lab_frame_data 2>/dev/zero
+    rm -rf $rootdir/plotfiles 2>/dev/zero
+
+
     killall mpirun 2>/dev/zero
     killall $warpx_exe_2d 2>/dev/zero
     killall $warpx_exe_3d 2>/dev/zero
