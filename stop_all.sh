@@ -18,6 +18,9 @@ done
 sudo killall pcm-latency 2>/dev/zero
 sudo killall pcm-memory 2>/dev/zero
 
+sudo killall warpx_2d 2>/dev/zero
+sudo killall warpx_3d 2>/dev/zero
+
 ps -ax|grep warpx
 ps -ax|grep pcm
 
