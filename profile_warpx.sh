@@ -23,7 +23,7 @@ MPIRUN="/usr/bin/mpirun"
 # 0     the profiler will wait until the warpx apps exit voluntarily
 # > 0   wait specified seconds to kill 
 #
-PROFILE_TOTAL_SECONDS=1200 #maximum to 20 minutes for each one
+PROFILE_TOTAL_SECONDS=0 #maximum to 20 minutes for each one
 
 rootdir="`dirname $0`"
 
