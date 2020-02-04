@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh -x
 
 
 export PATH=$PATH:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
@@ -24,6 +24,9 @@ MPIRUN="/usr/bin/mpirun"
 # > 0   wait specified seconds to kill 
 #
 PROFILE_TOTAL_SECONDS=0 #maximum to 20 minutes for each one
+
+
+echo "PROFILE_TOTAL_SECONDS=$PROFILE_TOTAL_SECONDS"
 
 rootdir="`dirname $0`"
 
@@ -170,13 +173,14 @@ profile_warpx() {
         touch $log_dir/pcm_latency.txt
         touch $log_dir/numastat.txt
         touch $log_dir/appoutput.txt
+        touch $log_dir/appoutput_error.txt
 
         echo "Profiling --- start ---"
 
         sudo pcm-memory         >$log_dir/pcm_memory.txt 2>/dev/zero     &
         #sudo pcm-latency -pmm -v >$log_dir/pcm_latency.txt  2>/dev/zero &
 
-        $MPIRUN -np $MPINP $warpx_exe $problem >$log_dir/appoutput.txt &
+        $MPIRUN -np $MPINP $warpx_exe $problem >$log_dir/appoutput.txt 2>$log_dir/appoutput_error.txt &
 
         #
         #ps -ax|grep $warpx_exe_basename
