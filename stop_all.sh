@@ -6,7 +6,7 @@
 kill_pids="`ps -ax|grep warpx|sed '/grep/d'|awk 'NR==1 {print $1}'`"
 
 # remove blanks before or after the PIDs
-kill_pids="`echo $warpx_pids`"
+kill_pids="`echo $kill_pids`"
 
 echo "kill_pids=$kill_pids"
 
