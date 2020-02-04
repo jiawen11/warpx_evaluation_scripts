@@ -193,7 +193,7 @@ profile_warpx() {
         #
         # get all warpx process PIDs
         #
-        warpx_pids="`ps -ax|grep warpx|sed '/sh/d'|sed '/grep/d'|sed '/mpirun/d'|awk 'NR==1 {print $1}'`"
+        warpx_pids="`ps -ax|grep warpx|sed '/sh/d'|sed '/grep/d'|sed '/mpirun/d'|awk '{print $1}'`"
         
         # remove blanks before or after the PIDs
         warpx_pids="`echo $warpx_pids`"
