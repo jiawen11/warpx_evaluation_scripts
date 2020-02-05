@@ -394,12 +394,15 @@ def draw_figure_memorybandwidth(csvfile):
     #plt.plot(X, Y1, color='black', linestyle='-', marker='x', label="CPU0")
     #plt.plot(X, Y2, color='red',   linestyle='-', marker='+', label="CPU1")
 
-    plt.plot(X, Y_S0R, color='black', linestyle='-', label="socket_0_read")
-    plt.plot(X, Y_S0W, color='red',   linestyle='-', label="socket_0_write")
+    #plt.plot(X, Y_S0R, color='black', linestyle='-', label="socket_0_read")
+    #plt.plot(X, Y_S0W, color='red',   linestyle='-', label="socket_0_write")
 
-    plt.plot(X, Y_S1R, color='black', linestyle='-.', label="socket_1_read")
-    plt.plot(X, Y_S1W, color='red',   linestyle='-.', label="socket_1_write")
-
+    #plt.plot(X, Y_S1R, color='black', linestyle='-.', label="socket_1_read")
+    #plt.plot(X, Y_S1W, color='red',   linestyle='-.', label="socket_1_write")
+    plt.scatter(X, Y_S0R, color='black', label="socket_0_read")
+    plt.scatter(X, Y_S0W, color='red',   label="socket_0_write")
+    plt.scatter(X, Y_S1R, color='blue',  label="socket_1_read")
+    plt.scatter(X, Y_S1W, color='green', label="socket_1_write")
     plt.legend(loc='best')
 
     Y_MAX=[max(Y_S0R), max(Y_S0W), max(Y_S1R), max(Y_S1W)]
@@ -483,14 +486,15 @@ def draw_figure_bandwidth_breakdown_read(csvfile):
     plt.tight_layout()
 
     #save figure
+    plt.rcParams['agg.path.chunksize'] = 1000000
     figure_dir=get_figure_dir(csvfile)
 
     basename=os.path.basename(csvfile).split(".")[0]
 
     figure_file=figure_dir + "/" + basename + "read.png"
 
-    plt.savefig(figure_file, dpi=600)
-
+    #plt.savefig(figure_file, dpi=600)
+    plt.savefig(figure_file)
     print("Diagram is saved to " + figure_file)
 
     plt.close()
@@ -532,13 +536,14 @@ def draw_figure_bandwidth_breakdown_write(csvfile):
     plt.tight_layout()
 
     #save figure
+    plt.rcParams['agg.path.chunksize'] = 10000
     figure_dir=get_figure_dir(csvfile)
 
     basename=os.path.basename(csvfile).split(".")[0]
 
     figure_file=figure_dir + "/" + basename + "write.png"
 
-    plt.savefig(figure_file, dpi=600)
+    plt.savefig(figure_file)
 
     print("Diagram is saved to " + figure_file)
 
@@ -561,8 +566,8 @@ for root, dirs, files in os.walk(result_dir, topdown=True):
                 draw_figure_cpucache(csvfile)
 
             if name == "pcm_memory.csv":
-                #draw_figure_memorybandwidth(csvfile)
-                #draw_figure_bandwidth_breakdown_read(csvfile)
+                draw_figure_memorybandwidth(csvfile)
+                draw_figure_bandwidth_breakdown_read(csvfile)
                 draw_figure_bandwidth_breakdown_write(csvfile)
 
             if name == "appoutput.csv":
