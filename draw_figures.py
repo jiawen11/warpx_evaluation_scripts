@@ -326,9 +326,79 @@ def draw_figure_general(csvfile, title, legend, xlabel, ylabel, color, linestyle
     plt.ylabel(ylabel)
 
 
+
+    #x_ticks  = []
+    #x_labels = []
+    #plt.xticks(x_ticks, x_labels, rotation=45, fontsize='small')
+
+
+    #
+    # save to file
+    #
+
+    figure_dir=get_figure_dir(csvfile)
+
+    basename=os.path.basename(csvfile).split(".")[0]
+
+    figure_file=figure_dir + "/" + basename + ".png"
+
+    plt.savefig(figure_file, dpi=600)
+
+    print("Diagram is saved to " + figure_file)
+
+    #if showfig:
+    #plt.show()
+
+    plt.close()
+
+
+
+    return
+
+def draw_figure_memoryusage(csvfile, title, legend, xlabel, ylabel, color, linestyle):
+
+    f = open(csvfile)
+    csvreader = csv.reader(f, delimiter=',')
+
+    Y=[]
+
+    header = f.readline()
+
+    print("header=",header)
+
+    for row in csvreader:
+        Y.append(row[0])
+
+    f.close()
+
+    if len(Y) == 0:
+        return
+
+    Y = np.array(Y, dtype=np.double)
+
+    X = np.linspace(0, len(Y), len(Y))
+
+    fig = plt.figure(figsize=(10,6.18))
+
+
+    plt.plot(X, Y, color=color, linestyle=linestyle, label=legend)
+
+    plt.legend(loc='best')
+
+    plt.ylim(0, max(Y))
+    plt.xlim(0, len(X))
+
+    #plt.grid(True)
+
+    plt.title(title)
+
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+
+
+
     x_ticks  = []
     x_labels = []
-
     plt.xticks(x_ticks, x_labels, rotation=45, fontsize='small')
 
 
@@ -389,7 +459,7 @@ def draw_figure_memorybandwidth(csvfile):
     X = np.linspace(0, len(Y_S0R), len(Y_S0R))
 
     fig = plt.figure(figsize=(10,6.18))
-
+    #fig = plt.figure()
 
     #plt.plot(X, Y1, color='black', linestyle='-', marker='x', label="CPU0")
     #plt.plot(X, Y2, color='red',   linestyle='-', marker='+', label="CPU1")
@@ -401,8 +471,8 @@ def draw_figure_memorybandwidth(csvfile):
     #plt.plot(X, Y_S1W, color='red',   linestyle='-.', label="socket_1_write")
     plt.scatter(X, Y_S0R, color='black', label="socket_0_read")
     plt.scatter(X, Y_S0W, color='red',   label="socket_0_write")
-    plt.scatter(X, Y_S1R, color='blue',  label="socket_1_read")
-    plt.scatter(X, Y_S1W, color='green', label="socket_1_write")
+    plt.scatter(X, Y_S1R, color='royalblue',  label="socket_1_read")
+    plt.scatter(X, Y_S1W, color='orange', label="socket_1_write")
     plt.legend(loc='best')
 
     Y_MAX=[max(Y_S0R), max(Y_S0W), max(Y_S1R), max(Y_S1W)]
@@ -415,10 +485,10 @@ def draw_figure_memorybandwidth(csvfile):
 
     #plt.grid(True)
 
-    plt.title("Memory bandwidth consumption (MB)")
+    plt.title("Memory bandwidth consumption (MB/s)")
 
     plt.xlabel("Time")
-    plt.ylabel("MB")
+    plt.ylabel("MB/s")
 
 
     x_ticks  = []
@@ -437,7 +507,7 @@ def draw_figure_memorybandwidth(csvfile):
 
     figure_file=figure_dir + "/" + basename + ".png"
 
-    plt.savefig(figure_file, dpi=600)
+    plt.savefig(figure_file)
 
     print("Diagram is saved to " + figure_file)
 
@@ -478,15 +548,15 @@ def draw_figure_bandwidth_breakdown_read(csvfile):
     X = np.linspace(0, len(Y_S0C0R), len(Y_S0C0R))
     fig = plt.figure(figsize=(10,6.18))
 
-    plt.stackplot(X, Y_S0C0R, Y_S0C1R, Y_S0C2R, Y_S0C3R, labels=['socket_0_channel_0_read','socket_0_channel_1_read','socket_0_channel_2_read','socket_0_channel_3_read'])
-    plt.title("Memory read bandwidth consumption breakdown(MB)")
+    plt.stackplot(X, Y_S0C0R, Y_S0C1R, Y_S0C2R, Y_S0C3R, labels=['socket_0_channel_0_read','socket_0_channel_1_read','socket_0_channel_2_read','socket_0_channel_3_read'],colors=['red','black','royalblue','orange'])
+    plt.title("Memory read bandwidth consumption breakdown(MB/s)")
     plt.xlabel("Time")
-    plt.ylabel("MB")
+    plt.ylabel("MB/s")
     plt.legend(loc='upper left')
     plt.tight_layout()
 
     #save figure
-    plt.rcParams['agg.path.chunksize'] = 1000000
+    plt.rcParams['agg.path.chunksize'] = 10000
     figure_dir=get_figure_dir(csvfile)
 
     basename=os.path.basename(csvfile).split(".")[0]
@@ -528,10 +598,10 @@ def draw_figure_bandwidth_breakdown_write(csvfile):
     X = np.linspace(0, len(Y_S0C0W), len(Y_S0C0W))
     fig = plt.figure(figsize=(10,6.18))
 
-    plt.stackplot(X, Y_S0C0W, Y_S0C1W, Y_S0C2W, Y_S0C3W, labels=['socket_0_channel_0_write','socket_0_channel_1_write','socket_0_channel_2_write','socket_0_channel_3_write'])
-    plt.title("Memory write bandwidth consumption breakdown(MB)")
+    plt.stackplot(X, Y_S0C0W, Y_S0C1W, Y_S0C2W, Y_S0C3W, labels=['socket_0_channel_0_write','socket_0_channel_1_write','socket_0_channel_2_write','socket_0_channel_3_write'],colors=['red','black','royalblue','orange'])
+    plt.title("Memory write bandwidth consumption breakdown(MB/s)")
     plt.xlabel("Time")
-    plt.ylabel("MB")
+    plt.ylabel("MB/s")
     plt.legend(loc='upper left')
     plt.tight_layout()
 
@@ -574,7 +644,7 @@ for root, dirs, files in os.walk(result_dir, topdown=True):
                 draw_figure_general(    csvfile,
                                         title='Iteration time',
                                         legend='Iteration time',
-                                        xlabel='Time',
+                                        xlabel='# of iterations',
                                         ylabel='Seconds',
                                         color='black',
                                         linestyle='-'
@@ -582,11 +652,11 @@ for root, dirs, files in os.walk(result_dir, topdown=True):
 
 
             if name == "numastat.csv":
-                draw_figure_general(    csvfile,
-                                        title='UsedMemory (MiB)',
+                draw_figure_memoryusage(    csvfile,
+                                        title='UsedMemory (MB)',
                                         legend='MemUsed',
                                         xlabel='Time',
-                                        ylabel='MiB',
+                                        ylabel='MB',
                                         color='black',
                                         linestyle='-'
                                         )
