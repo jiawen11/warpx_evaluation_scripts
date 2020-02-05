@@ -75,12 +75,12 @@ warpx_problems_3d=""
 
 #warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_64x64x512"
 
-warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024"
+#warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024"
 warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024_maxlevel_1"
 warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024_maxlevel_3"
 warpx_problems_3d="$warpx_problems_3d warpx_problems/laser-driven-acceleration/test_3d_128x128x1024_maxlevel_5"
 
-warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024"
+#warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024"
 warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024_maxlevel_1"
 warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024_maxlevel_3"
 warpx_problems_3d="$warpx_problems_3d warpx_problems/beam-driven-acceleration/test_3d_boost_128x128x1024_maxlevel_5"
@@ -184,7 +184,10 @@ profile_warpx() {
 
         echo "Profiling --- start ---"
 
-        sudo pcm-memory         >$log_dir/pcm_memory.txt 2>/dev/zero     &
+        #
+        # stdbuf -oL will turn off the print buffer (stdout) for pcm-memory
+        #
+        sudo stdbuf -oL pcm-memory         >$log_dir/pcm_memory.txt 2>/dev/zero     &
         #sudo pcm-latency -pmm -v >$log_dir/pcm_latency.txt  2>/dev/zero &
 
         $MPIRUN -np $MPINP $warpx_exe $problem >$log_dir/appoutput.txt 2>$log_dir/appoutput_error.txt &
