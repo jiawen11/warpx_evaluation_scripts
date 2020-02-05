@@ -134,8 +134,8 @@ extract_csv_memorybank(){
             col=3
             channel_read=""
             for socket in $SOCKETS_LIST;do
-
-                channel_read="`echo $line|cut -d':' -f$col|cut -d'-' -f1|tr -d \'\|\-\'`"
+		#"`echo $line|cut -d':' -f$col|cut -d'-' -f1|tr -d \'\|\-\'`"
+                channel_read="`echo $line|cut -d':' -f$col|cut -d'-' -f1`"
                 channel_read="`echo $channel_read`"
                 col="`expr $col + 2`"
 

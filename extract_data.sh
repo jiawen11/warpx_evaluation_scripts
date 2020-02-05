@@ -62,7 +62,7 @@ for dir in $subdirs; do
 
     extract_csv_cpucache $datadir
 
-    extract_csv_numastat $datadir
+    #extract_csv_numastat $datadir
 
 
     extract_csv_memorybank $datadir
