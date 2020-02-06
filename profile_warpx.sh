@@ -34,13 +34,13 @@ warpx_run="$rootdir/warpx_deploy/warpx_run"
 
 result_dir="$rootdir/profile_result_np""$MPINP"
 
-if [ -d "$result_dir"".old" ];then
-    rm -rf "$result_dir"".old" 2>/dev/zero
-fi
+#if [ -d "$result_dir"".old" ];then
+#    rm -rf "$result_dir"".old" 2>/dev/zero
+#fi
 
-if [ -d "$result_dir" ];then
-    mv $result_dir "$result_dir"".old"
-fi
+#if [ -d "$result_dir" ];then
+#    mv $result_dir "$result_dir"".old"
+#fi
 
 mkdir $result_dir 2>/dev/zero
 
