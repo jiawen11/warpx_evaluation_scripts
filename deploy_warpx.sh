@@ -33,7 +33,8 @@ cd warpx_directory
 
 rm -rf WarpX picsar amrex 2>/dev/zero
 
-git clone --branch dev https://github.com/ECP-WarpX/WarpX.git               
+#git clone --branch dev https://github.com/ECP-WarpX/WarpX.git  
+git clone --branch master https://github.com/ECP-WarpX/WarpX.git 
 git clone --branch master https://bitbucket.org/berkeleylab/picsar.git      
 git clone --branch development https://github.com/AMReX-Codes/amrex.git     
 
